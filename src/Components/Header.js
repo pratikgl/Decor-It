@@ -7,6 +7,7 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PersonIcon from '@material-ui/icons/Person';
 import logo from './../Assets/img/logo.png';
 import Image from 'react-bootstrap/Image'
+import { Container, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -22,27 +23,31 @@ export default function Header(props) {
   const classes = useStyles();
   return (
     <React.Fragment>
+      <Container maxWidth="lg" className={classes.toolbar} >
+        <Toolbar>
+          {/* logo */}
+          <Image src={logo} alt={'logo'} className={classes.logo} />
 
-      <Toolbar className={classes.toolbar}>
+          {/* empty div */}
+          <div style={{ flex: 1 }}></div>
 
-        {/* logo */}
-        <Image src={logo} alt={'logo'} className={classes.logo} />
+          {/* Profile : Login */}
+          <IconButton>
+            <PersonIcon style={{ marginRight: 2 }} />
+            <Typography >
+              User
+            </Typography>
+          </IconButton>
 
-        {/* empty div */}
-        <div style={{ flex: 1 }}></div>
-
-        {/* Profile : Login */}
-        <IconButton>
-          <PersonIcon />
-        </IconButton>
-
-
-        {/* Bucket */}
-        <IconButton>
-          <ShoppingCartIcon />
-        </IconButton>
-      </Toolbar>
-
+          {/* Bucket */}
+          <IconButton>
+            <ShoppingCartIcon style={{ marginRight: 2 }} />
+            <Typography>
+              Cart
+            </Typography>
+          </IconButton>
+        </Toolbar>
+      </Container>
     </React.Fragment>
   );
 }
