@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useAuth } from '../Contexts/AuthContext';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { useHistory } from 'react-router';
 
 function Copyright() {
   return (
@@ -58,6 +59,7 @@ export default function SignUp() {
   const [error, setError] = useState('')
   // if loading = true : we will disable the submit button to prevent submitting again and again
   const [loading, setLoading] = useState(false)
+  const history = useHistory()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -70,6 +72,7 @@ export default function SignUp() {
       setError('')
       setLoading(true)
       await signup(emailRef.current.value, passwordRef.current.value)
+      history.push('/')
     } catch (er) {
       if (er.code === 'auth/invalid-email') {
         setError('Invalid Email Address')

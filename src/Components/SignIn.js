@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useAuth } from '../Contexts/AuthContext';
+import { useHistory } from 'react-router';
 
 function Copyright() {
   return (
@@ -55,6 +56,7 @@ export default function SignIn() {
   const { signin } = useAuth()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const history = useHistory()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -63,6 +65,7 @@ export default function SignIn() {
       setError('')
       setLoading(true)
       await signin(emailRef.current.value, passwordRef.current.value)
+      history.push('/')
     } catch {
       setError('Invalid credentials')
     }
@@ -125,6 +128,7 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Sign In
           </Button>
