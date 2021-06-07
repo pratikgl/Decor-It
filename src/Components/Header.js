@@ -6,10 +6,10 @@ import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import PersonIcon from '@material-ui/icons/Person';
 import logo from './../Assets/img/logo.png';
 import Image from 'react-bootstrap/Image'
-import { Button, Container, Typography } from '@material-ui/core';
+import { Button, Container, Dialog, Typography } from '@material-ui/core';
 import { useAuth } from '../Contexts/AuthContext';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { useHistory } from 'react-router';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -22,6 +22,15 @@ const useStyles = makeStyles((theme) => ({
   button: {
     textTransform: 'none',
     marginRight: 10,
+  },
+  cookieAlert: {
+    "& .MuiAlert-icon": {
+      fontSize: 25
+    },
+    "& .MuiAlert-message": {
+      fontSize: 16,
+      marginRight: 10
+    },
   }
 }));
 
@@ -30,17 +39,16 @@ export default function Header(props) {
 
   const [error, setError] = useState('')
   const { currentUser, logout } = useAuth();
-  const history = useHistory()
+  const [open, setOpen] = useState(false)
 
   async function handleLogout() {
     setError('')
-
     try {
       await logout()
-      history.pushState('/')
     } catch {
       setError('Failed to log out')
     }
+    setOpen(true)
   }
 
   return (
@@ -83,6 +91,17 @@ export default function Header(props) {
             </Typography>
             </Button>
           }
+
+          {/* show a dialog box after log out */}
+          <Dialog onClose={() => setOpen(false)} open={open}>
+            <Alert
+              severity={error ? 'error' : 'success'}
+              onClose={() => setOpen(false)}
+              className={classes.cookieAlert}
+            >
+              {error ? error : 'Log out Successful'}
+            </Alert>
+          </Dialog>
         </Toolbar>
       </Container>
     </React.Fragment>
