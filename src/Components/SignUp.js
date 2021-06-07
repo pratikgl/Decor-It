@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -12,6 +10,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { useAuth } from '../Contexts/AuthContext';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 function Copyright() {
   return (
@@ -49,6 +49,38 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
 
+  const fnameRef = useRef()
+  const lnameRef = useRef()
+  const emailRef = useRef()
+  const passwordRef = useRef()
+  const cnfpasswordRef = useRef()
+  const { signup } = useAuth()
+  const [error, setError] = useState('')
+  // if loading = true : we will disable the submit button to prevent submitting again and again
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+
+    if (passwordRef.current.value !== cnfpasswordRef.current.value) {
+      return setError('Passwords do not match')
+    }
+
+    try {
+      setError('')
+      setLoading(true)
+      await signup(emailRef.current.value, passwordRef.current.value)
+    } catch (er) {
+      if (er.code === 'auth/invalid-email') {
+        setError('Invalid Email Address')
+      } else {
+        setError('Failed to create an account')
+      }
+    }
+
+    setLoading(false)
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -59,10 +91,20 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+
+        {/* Show the error in an alert view */}
+        {
+          error &&
+          <Alert severity="error" style={{ marginTop: 10, alignSelf: 'normal' }}>
+            <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        }
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
+                inputRef={fnameRef}
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -75,6 +117,7 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                inputRef={lnameRef}
                 variant="outlined"
                 required
                 fullWidth
@@ -86,6 +129,8 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                inputRef={emailRef}
+                error={error === "Invalid Email Address" ? true : false}
                 variant="outlined"
                 required
                 fullWidth
@@ -97,6 +142,8 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                inputRef={passwordRef}
+                error={error === "Passwords do not match" ? true : false}
                 variant="outlined"
                 required
                 fullWidth
@@ -108,9 +155,17 @@ export default function SignUp() {
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+              <TextField
+                inputRef={cnfpasswordRef}
+                error={error === "Passwords do not match" ? true : false}
+                variant="outlined"
+                required
+                fullWidth
+                name="cnfpassword"
+                label="Confirm Password"
+                type="password"
+                id="cnfpassword"
+                autoComplete="current-password"
               />
             </Grid>
           </Grid>
@@ -120,12 +175,14 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            // disable the submit button when the status is loading
+            disabled={loading}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link to='/signin' variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
