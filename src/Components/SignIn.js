@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { useAuth } from '../Contexts/AuthContext';
 import { useHistory } from 'react-router';
+import ResetPassword from './ResetPassword';
 
 function Copyright() {
   return (
@@ -57,6 +58,7 @@ export default function SignIn() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const history = useHistory()
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -133,14 +135,26 @@ export default function SignIn() {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              <Link href="./forgot_password" variant="body2">
+            <Grid
+              item
+              xs
+              onClick={() => setResetPasswordOpen(true)}
+              style={{ cursor: 'pointer' }}
+            >
+              <Link variant="body2">
                 Forgot password?
               </Link>
             </Grid>
+
+            {/* show a dialog box for resetting password */}
+            <ResetPassword
+              resetPasswordOpen={resetPasswordOpen}
+              togglePasswordOpen={() => setResetPasswordOpen(false)}
+            />
+
             <Grid item>
               <Link href="./signup" variant="body2">
-                {"Don't have an account? Sign Up"}
+                Don't have an account? Sign Up
               </Link>
             </Grid>
           </Grid>
