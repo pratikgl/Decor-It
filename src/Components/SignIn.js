@@ -14,19 +14,8 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { useAuth } from '../Contexts/AuthContext';
 import { useHistory } from 'react-router';
 import ResetPassword from './ResetPassword';
+import Copyright from './Copyright';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="/">
-        Decor It
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(13),
