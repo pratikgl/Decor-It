@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth } from '../firebase'
+import firebase from 'firebase/app'
 
 const AuthContext = React.createContext()
 
@@ -36,7 +37,11 @@ export function AuthProvider({ children }) {
   }
 
   function verifyPassword(password) {
-    return currentUser.reauthenticateWithCredential(currentUser.email, password)
+    var creditional = firebase.auth.EmailAuthProvider.credential(
+      currentUser.email,
+      password
+    )
+    return currentUser.reauthenticateWithCredential(creditional)
   }
 
   useEffect(() => {
