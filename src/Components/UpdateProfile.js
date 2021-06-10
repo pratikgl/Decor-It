@@ -43,7 +43,7 @@ export default function UpdateProfile() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const cnfpasswordRef = useRef()
-  const { currentUser, updatePassword, updateEmail, getData } = useAuth()
+  const { currentUser, updatePassword, updateEmail, getData, addUserDb } = useAuth()
   const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false)
   const [error, setError] = useState('')
   const [verifyPassword, setVerifyPassword] = useState(false)
@@ -74,7 +74,18 @@ export default function UpdateProfile() {
     if (passwordRef.current.value) {
       promises.push(updatePassword(passwordRef.current.value))
     }
-
+    if (fnameRef.current.value === '') {
+      fnameRef.current.value = fname
+    }
+    if (lnameRef.current.value === '') {
+      lnameRef.current.value = lname
+    }
+    promises.push(addUserDb(
+      fnameRef.current.value,
+      lnameRef.current.value,
+      emailRef.current.value,
+      currentUser.uid
+    ))
     Promise.all(promises)
       .then(() => {
         setUpdateMessage('success')
@@ -127,25 +138,25 @@ export default function UpdateProfile() {
             <Grid item xs={12} sm={6}>
               <TextField
                 inputRef={fnameRef}
-                value={currentUser && fname}
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
                 fullWidth
                 id="firstName"
                 label="First Name"
+                placeholder={fname}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 inputRef={lnameRef}
-                value={currentUser && lname}
                 variant="outlined"
                 fullWidth
                 id="lastName"
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                placeholder={lname}
               />
             </Grid>
             <Grid item xs={12}>
