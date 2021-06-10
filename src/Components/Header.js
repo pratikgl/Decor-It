@@ -38,8 +38,9 @@ export default function Header(props) {
   const classes = useStyles();
 
   const [error, setError] = useState('')
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, getData } = useAuth();
   const [open, setOpen] = useState(false)
+  const [fname, setFname] = useState('')
 
   async function handleLogout() {
     setError('')
@@ -49,6 +50,15 @@ export default function Header(props) {
       setError('Failed to log out')
     }
     setOpen(true)
+  }
+
+  // get the access to the database
+  getDoc()
+  async function getDoc() {
+    if (currentUser) {
+      const doc = await getData()
+      setFname(doc.data().fname)
+    }
   }
 
   return (
@@ -69,7 +79,7 @@ export default function Header(props) {
           >
             <PersonIcon style={{ marginRight: 3 }} />
             <Typography >
-              {currentUser ? currentUser.email : 'Sign In'}
+              {currentUser ? fname : 'Sign In'}
             </Typography>
           </Button>
 
