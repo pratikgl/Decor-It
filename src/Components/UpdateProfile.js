@@ -43,12 +43,14 @@ export default function UpdateProfile() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const cnfpasswordRef = useRef()
-  const { currentUser, updatePassword, updateEmail } = useAuth()
+  const { currentUser, updatePassword, updateEmail, getData } = useAuth()
   const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false)
   const [error, setError] = useState('')
   const [verifyPassword, setVerifyPassword] = useState(false)
   const [updateMessage, setUpdateMessage] = useState('')
   const history = useHistory()
+  const [fname, setFname] = useState('')
+  const [lname, setLname] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -80,6 +82,16 @@ export default function UpdateProfile() {
       .catch(() => {
         setUpdateMessage('error')
       })
+  }
+
+  // get the access to the database
+  getDoc()
+  async function getDoc() {
+    if (currentUser) {
+      const doc = await getData()
+      setFname(doc.data().fname)
+      setLname(doc.data().lname)
+    }
   }
 
   return (
@@ -115,7 +127,7 @@ export default function UpdateProfile() {
             <Grid item xs={12} sm={6}>
               <TextField
                 inputRef={fnameRef}
-                defaultValue={''}
+                value={currentUser && fname}
                 autoComplete="fname"
                 name="firstName"
                 variant="outlined"
@@ -127,7 +139,7 @@ export default function UpdateProfile() {
             <Grid item xs={12} sm={6}>
               <TextField
                 inputRef={lnameRef}
-                defaultValue={''}
+                value={currentUser && lname}
                 variant="outlined"
                 fullWidth
                 id="lastName"
