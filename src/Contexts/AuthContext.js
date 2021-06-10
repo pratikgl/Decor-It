@@ -16,15 +16,6 @@ export function AuthProvider({ children }) {
     return auth.createUserWithEmailAndPassword(email, password)
   }
 
-  function addUserDb(fname, lname, email, uid) {
-    const data = {
-      fname: fname,
-      lname: lname,
-      email: email
-    }
-    return db.collection('users').doc(uid).set(data);
-  }
-
   function signin(email, password) {
     return auth.signInWithEmailAndPassword(email, password)
   }
@@ -53,6 +44,19 @@ export function AuthProvider({ children }) {
     return currentUser.reauthenticateWithCredential(creditional)
   }
 
+  function addUserDb(fname, lname, email, uid) {
+    const data = {
+      fname: fname,
+      lname: lname,
+      email: email
+    }
+    return db.collection('users').doc(uid).set(data);
+  }
+
+  function getData() {
+    return db.collection('users').doc(currentUser.uid).get()
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
@@ -71,6 +75,7 @@ export function AuthProvider({ children }) {
     updatePassword,
     verifyPassword,
     addUserDb,
+    getData,
   }
 
   return (
