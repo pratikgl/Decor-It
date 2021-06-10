@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -43,7 +43,7 @@ export default function SignUp() {
   const emailRef = useRef()
   const passwordRef = useRef()
   const cnfpasswordRef = useRef()
-  const { signup } = useAuth()
+  const { signup, addUserDb, currentUser } = useAuth()
   const [error, setError] = useState('')
   // if loading = true : we will disable the submit button to prevent submitting again and again
   const [loading, setLoading] = useState(false)
@@ -59,7 +59,14 @@ export default function SignUp() {
     try {
       setError('')
       setLoading(true)
-      await signup(emailRef.current.value, passwordRef.current.value)
+      const user = await signup(emailRef.current.value, passwordRef.current.value)
+
+      await addUserDb(
+        fnameRef.current.value,
+        lnameRef.current.value,
+        emailRef.current.value,
+        user.user.uid
+      )
       history.push('/')
     } catch (er) {
       if (er.code === 'auth/invalid-email') {
