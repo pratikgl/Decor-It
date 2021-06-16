@@ -48,8 +48,11 @@ export default function HomeItems({ items }) {
                 <Typography gutterBottom variant="h5" component="h2">
                   {items.docs[id].data().heading}
                 </Typography>
-                <Typography>
+                <Typography variant='body2' color="textSecondary">
                   {items.docs[id].data().details}
+                </Typography>
+                <Typography style={{ marginTop: '12px' }} variant="h5" component='h1'>
+                  {'₹ ' + items.docs[id].data().price}
                 </Typography>
               </CardContent>
               <CardActions>
