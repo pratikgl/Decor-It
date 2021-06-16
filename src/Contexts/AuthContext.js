@@ -57,6 +57,20 @@ export function AuthProvider({ children }) {
     return db.collection('users').doc(currentUser.uid).get()
   }
 
+  function getItems() {
+    return db.collection('items').get()
+  }
+
+  function addItem(uid, details, price, heading, url) {
+    const data = {
+      details: details,
+      price: price,
+      heading: heading,
+      url: url
+    }
+    return db.collection('items').doc(uid).set(data);
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setCurrentUser(user)
@@ -76,6 +90,8 @@ export function AuthProvider({ children }) {
     verifyPassword,
     addUserDb,
     getData,
+    getItems,
+    addItem,
   }
 
   return (

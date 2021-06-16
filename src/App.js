@@ -5,6 +5,7 @@ import SignUp from './Components/SignUp';
 import SignIn from './Components/SignIn';
 import UpdateProfile from './Components/UpdateProfile';
 import { AuthProvider } from './Contexts/AuthContext'
+import AddItem from './Components/AddItem';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path='/signup' component={SignUp} />
           <Route path='/signin' component={SignIn} />
           <Route path='/update_profile' component={UpdateProfile} />
+          <Route path='/add' component={AddItem} />
         </Switch>
       </Router>
     </AuthProvider>
