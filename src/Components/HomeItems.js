@@ -20,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   cardMedia: {
-    paddingTop: '56.25%', // 16:9
+    paddingTop: '133%', // 4:3
+    margin: '5px'
   },
   cardContent: {
     flexGrow: 1,
@@ -28,30 +29,27 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-export default function HomeItems(items) {
+export default function HomeItems({ items }) {
   const classes = useStyles();
+  const num = items.size
 
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       {/* End hero unit */}
       <Grid container spacing={4}>
-        {cards.map((id) => (
+        {[...Array(num)].map((_, id) => (
           < Grid item key={id} xs={12} sm={6} md={4} >
             <Card className={classes.card}>
               <CardMedia
                 className={classes.cardMedia}
-                image={'https://firebasestorage.googleapis.com/v0/b/decor-it.appspot.com/o/items%2Fimg%2F1.jpeg?alt=media&token=985f5cdb-acb6-4469-94ce-994fd0eb3a9a'}
-                title='Wall Dcor Painintg'
+                image={items.docs[id].data().url}
               />
               <CardContent className={classes.cardContent}>
                 <Typography gutterBottom variant="h5" component="h2">
-                  55
-                  {/* {pp && pp.docs[0].data().price} */}
+                  {items.docs[id].data().heading}
                 </Typography>
                 <Typography>
-                  This is a media card. You can use this section to describe the content.
+                  {items.docs[id].data().details}
                 </Typography>
               </CardContent>
               <CardActions>
