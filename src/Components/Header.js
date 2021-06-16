@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -34,13 +34,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Header(props) {
+export default function Header() {
   const classes = useStyles();
 
   const [error, setError] = useState('')
   const { currentUser, logout, getData } = useAuth();
   const [open, setOpen] = useState(false)
-  const [fname, setFname] = useState('')
+  const [fname, setFname] = useState('Sign In')
 
   async function handleLogout() {
     setError('')
@@ -52,14 +52,13 @@ export default function Header(props) {
     setOpen(true)
   }
 
-  // get the access to the database
-  getDoc()
-  async function getDoc() {
-    if (currentUser) {
+  useEffect(() => {
+    async function getDoc() {
       const doc = await getData()
       setFname(doc.data().fname)
-    }
-  }
+    };
+    currentUser ? getDoc() : setFname('Sign In')
+  }, [currentUser]);
 
   return (
     <React.Fragment>
@@ -75,11 +74,11 @@ export default function Header(props) {
           <Button
             color='primary'
             className={classes.button}
-            href={currentUser ? '/update_profile' : 'signin'}
+            href={currentUser ? '/update_profile' : '/signin'}
           >
             <PersonIcon style={{ marginRight: 3 }} />
             <Typography >
-              {currentUser ? fname : 'Sign In'}
+              {fname}
             </Typography>
           </Button>
 
@@ -91,16 +90,13 @@ export default function Header(props) {
             </Typography>
           </Button>
 
-          {
-            /* Log out button only is currently logged in */
-            currentUser &&
-            <Button color='primary' className={classes.button} onClick={handleLogout}>
-              <ExitToAppIcon style={{ marginRight: 3 }} />
-              <Typography>
-                Log Out
+          {/* Log out button only is currently logged in */}
+          <Button hidden={!currentUser} color='primary' className={classes.button} onClick={handleLogout}>
+            <ExitToAppIcon style={{ marginRight: 3 }} />
+            <Typography>
+              Log Out
             </Typography>
-            </Button>
-          }
+          </Button>
 
           {/* show a dialog box after log out */}
           <Dialog onClose={() => setOpen(false)} open={open}>
