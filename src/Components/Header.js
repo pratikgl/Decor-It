@@ -10,6 +10,7 @@ import { Button, Container, Dialog, Typography } from '@material-ui/core';
 import { useAuth } from '../Contexts/AuthContext';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Alert } from '@material-ui/lab';
+import Badge from '@material-ui/core/Badge';
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -41,6 +42,7 @@ export default function Header() {
   const { currentUser, logout, getData } = useAuth();
   const [open, setOpen] = useState(false)
   const [fname, setFname] = useState('Sign In')
+  const [cartCount, setCartCount] = useState(0)
 
   async function handleLogout() {
     setError('')
@@ -56,8 +58,17 @@ export default function Header() {
     async function getDoc() {
       const doc = await getData()
       setFname(doc.data().fname)
+
+      var cart = doc.data().cart
+      var count = 0
+      Object.keys(cart).forEach(id => count += cart[id])
+      setCartCount(count)
     };
-    currentUser ? getDoc() : setFname('Sign In')
+    function resetUser() {
+      setFname('Sign In')
+      setCartCount(0)
+    }
+    currentUser ? getDoc() : resetUser()
   }, [currentUser]);
 
   return (
@@ -84,7 +95,9 @@ export default function Header() {
 
           {/* Bucket */}
           <Button color='primary' className={classes.button}>
-            <ShoppingCartIcon style={{ marginRight: 3 }} />
+            <Badge color="secondary" badgeContent={cartCount}>
+              <ShoppingCartIcon style={{ marginRight: 3 }} />
+            </Badge>
             <Typography>
               Cart
             </Typography>
